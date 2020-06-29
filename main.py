@@ -34,7 +34,7 @@ def show_image(img, file_name):
     # plt.show()
     plt.savefig(out_path + file_name)
 
-# show_image(raw_img[:,:, 0], "raw_img.png")
+show_image(raw_img[:,:, 0], "raw_img.png")
 
 # 3. Noise Removal
 ## median filter function
@@ -64,25 +64,29 @@ else:
 
 ## show filtered image
 print(filt_img.shape)
-# show_image(filt_img[:,:, 0], "filt_img.png")
+show_image(filt_img[:,:, 0], "filt_img.png")
 
 # 4. Determine the ROI
 ## sum the amount of changes in each pixel
 diff_img_pkl_path = "./image_data/diff_img.pickle" 
 diff_img = np.zeros((img_height, img_width, img_num - 1))
+diff_img_sum = np.zeros((img_num - 1, 1))
 if not os.path.exists(diff_img_pkl_path):
     for i_img in range(img_num - 1):
         print("Diff img_" + str(i_img))
         for i_height in range(img_height):
             for i_width in range(img_width):
-                diff_img[i_height, i_width, i_img] += np.abs(filt_img[i_height, i_width, i_img + 1] - filt_img[i_height, i_width, i_img])
+                diff_img[i_height, i_width, i_img] += np.abs(filt_img[i_height, i_width, i_img + 1] - filt_img[i_height, i_width, i_img]) 
         show_image(diff_img[:,:, i_img], "diff_img_" + str(i_img))
+        diff_img_sum[i_img, 0] = np.sum(diff_img[:,:, i_img])
+        print("Sum Img_" + str(i_img) + ": " + str(diff_img_sum[i_img, 0]))
     with open(diff_img_pkl_path, 'wb') as out_file:
         pickle.dump(diff_img, out_file)
 else:
     with open(diff_img_pkl_path, "rb") as img:
         diff_img = pickle.load(img) 
 
+## binarization
 max_val = 255
 threshold = 128
 bin_img = (diff_img[:,:, 1] > threshold) * max_val
@@ -100,6 +104,8 @@ for i_img in range(img_num):
 # 6. Plot the Fluorescence Recovery Curve
 fig, ax = plt.subplots()
 ax.plot(bright_curve)
+ax.set_xlabel("Time (s)")
+ax.set_ylabel("Fluorescent Intensity (a.u.)")
 plt.savefig(out_path + "curve.png")
 plt.show()
 
