@@ -11,7 +11,7 @@ Memo: The images are not included by gitignoring.
 
 ## Dependency / Requirements
 ### Python
-`v3`
+`v3.6.5`
 
 ### Library
 ```
