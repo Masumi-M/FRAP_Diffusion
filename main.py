@@ -104,8 +104,18 @@ plt.savefig(out_path + "curve.png")
 plt.show()
 
 # 7. Calculate the Diffusion Coefficient
-bleach_radius = 1.0       # m
-diffusion_time = 1.0      # sec
+## calculate the bleach radius
+num_pixel = np.count_nonzero(bin_img)
+print(num_pixel)
+area = num_pixel * ((0.225 * (10 ** (-6)))** 2)
+bleach_radius = (area / np.pi)** 0.5  # m
+print("bleach_radius = " + str(bleach_radius))
+
+## calculate the diffusion time
+diffusion_time = 16.0  # sec
+print("diffusion_time = " + str(diffusion_time))
+
+## calculate the diffusion coefficient
 diffusion_coefficient = bleach_radius ** 2 / (4 * diffusion_time)
 print("D = " + str(diffusion_coefficient))
 
