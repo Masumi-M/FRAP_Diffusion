@@ -16,7 +16,7 @@ Memo: The images are not included by gitignoring.
 ### Library
 ```
 - numpy==1.17.2
-
+- matplotlib==3.2.2
 ```
 
 ## Setup and Usage
